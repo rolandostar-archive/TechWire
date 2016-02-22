@@ -7,6 +7,7 @@ $results = mysqli_query($connecDB, "SELECT * FROM version WHERE idproducto=".$id
 while($row = mysqli_fetch_array($results)){
   $nombre = $row["nombre"];
   $precio = $row["precio"];
+  $sinopsis = $row["sinopsis"];
 }
 
 ?><!DOCTYPE html>
@@ -60,23 +61,23 @@ while($row = mysqli_fetch_array($results)){
   <div class="container detail">
     <div class="row">
       <div class="twelve columns">
-        <h1>Nombre producto</h1>
+        <h1><?php echo $nombre?></h1>
       </div>
     </div>
     <div class="row">
       <div class="one-third column">
         <div class="one-third column">
-          <img src="img/aud1.jpg" width=90px>
+        <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'.jpg" width=90px>'?>
           <img src="img/aud2.jpg" width=90px>
           <img src="img/aud3.jpg" width=90px>
         </div>
         <div class="two-thirds column">
-          <img src="img/aud1.jpg" width=100%>
+          <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'.jpg" width=100%>'?>
         </div>
       </div>
       <div class="two-thirds column">
         <div class="info_p">
-          <p style="font-size:30px;  font-weight:bold;">MXN $479.00</p>
+          <p style="font-size:30px;  font-weight:bold;">MXN $<?php echo $precio?>.00</p>
           Versiones disponibles:
           <br>
           <select class="ver">
@@ -86,7 +87,7 @@ while($row = mysqli_fetch_array($results)){
           
           <div class="descrip">
             Sinopsis: <br>
-            gggg<br>
+            <?php echo $sinopsis?><br>
           </div>
         </div>
       </div>
