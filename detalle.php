@@ -59,6 +59,11 @@ while($row = mysqli_fetch_array($results)){
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container detail">
     <div class="row">
+      <div class="twelve columns">
+        <h1>Nombre producto</h1>
+      </div>
+    </div>
+    <div class="row">
       <div class="one-third column">
         <div class="one-third column">
           <img src="img/aud1.jpg" width=90px>
