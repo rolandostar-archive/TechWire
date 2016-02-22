@@ -4,6 +4,10 @@ header('Content-Type: text/html; charset=utf-8');
 $sql="SELECT COUNT(*) FROM version WHERE 1 AND ";
 if(isset($_GET["categoria"])) $sql = "SELECT COUNT(*) FROM version,producto WHERE producto.idcategoria='".$_GET["categoria"]."' AND producto.idproducto = version.idproducto AND ";
 
+if(isset($_GET["buscar"])){
+  $sql = $sql."version.nombre LIKE '%".$_GET["buscar"]."%' AND ";
+}
+
 if(isset($_GET["precio"])){
   switch ($_GET["precio"]) {
     case 1:$sql = $sql."precio < 250";                break;
@@ -14,6 +18,7 @@ if(isset($_GET["precio"])){
     default:$sql = $sql."1";                          break;
   }
 }else $sql = $sql."1";
+//echo $sql;
 $results = mysqli_query($connecDB,$sql);
 $get_total_rows = mysqli_fetch_array($results); //total
 $pages = ceil($get_total_rows[0]/8);
@@ -37,7 +42,8 @@ $pages = ceil($get_total_rows[0]/8);
   <!-- Scripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script type="text/javascript" src="scripts/jquery.bootpag.min.js"></script>
+  <script type="text/javascript" src="js/jquery.bootpag.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui.js"></script>
   <?php require_once('scripts/catalog.php'); ?>
 
 </head>
@@ -45,60 +51,64 @@ $pages = ceil($get_total_rows[0]/8);
   <div class="page-wrap">
   <!-- Logos
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container title">
+  <div class="title">
     <div class="row">
       <div class="one-half column">
         <a href="/"><img src="img/logo.png" width="198px"></a>
-      </div>
-      <div class="one-half column">
-        <img class="u-pull-right" src="img/Sindral_AltLogo.png" height="55px">
       </div>
     </div>
   </div>
   <!-- Navegacion
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="nav">
-    <div class="container navbar">
-      <div class="menu">
-        <ul>
-          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Electrodomesticos');"><span>Electrodomesticos</span></a></li>
-          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Audio');"><span>Audio</span></a></li>
-          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','TV');"><span>TV y Video</span></a></li>
-          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Tecnologia');"><span>Tecnología</span></a></li>
-          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Videojuegos');"><span>Videojuegos</span></a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <div id="menu">
+    <ul class="menu" align="center">
+      <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Electrodomesticos');" class="menu"><span>Electrodomesticos</span></a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Audio');"  class="menu"><span>Audio</span></a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','TV');"  class="menu"><span>TV y Video</span></a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Tecnologia');"  class="menu"><span>Tecnología</span></a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Videojuegos');"  class="menu"><span>Videojuegos</span></a></li>
+    </ul>
+  </div> 
   <!-- Catalogo
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container catalog">
-    <div class="two columns filter">
-      <span>Filtrar por Precio</span>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','1');">Menos de $250</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','2');">$250 - $500</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','3');">$500 - $1000</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','4');">$1000 - $2000</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','5');">Mas de $2000</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','0');">Cualquier Precio</a></li>
+    <div class="row">
+      <div class="twelve columns">
+        <form action="/" method="GET" style="margin: 0 auto">
+        <input type="text" name="buscar" id="Busqueda" placeholder="Buscar por Nombre"> <input type="submit">
+        </form>
+      </div>
     </div>
-    <div class="ten columns center">
-      <div id="results" style="width:100%"></div>
+    <div class="row" style="height:530px">
+      <div class="two columns filter">
+        <div class="filter">
+          <p>FILTRO POR PRECIO: </p>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','1');">Menos de $250</a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','2');">$250 - $500</a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','3');">$500 - $1000</a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','4');">$1000 - $2000</a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','5');">Mas de $2000</a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('precio','0');">Todos los precios</a></li>
+        </div>
+      </div>
+    <div class="ten columns">
+          <div class="twelve columns" id="results"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="pagination"></div>
     </div>
   </div>
-  <div class="pagination"></div>
 </div>
   <!-- Footer
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <footer class="site-footer">
+  <div class="site-footer">
     <div class="caja-redes">
       <a href="#" class="icono twitter"><img src="img/twitter.png" class="icont"><span></span></a>
       <a href="#" class="icono facebook"><img src="img/fb.png" class="iconfb"><span></span></a>
       <a href="#" class="icono google"><img src="img/gp.png" class="icongp"><span></span></a>
     </div>
-    <div class="copyright">
-      &copy; 2016, Sindral Software. All rights reserved.
-    </div>
-  </footer>
+    <div class="copyright">&copy; 2016, Made by Sindral Software. All rights reserved.</div>
+  </div>
 </body>
 </html>

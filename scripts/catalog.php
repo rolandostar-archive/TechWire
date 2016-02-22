@@ -1,6 +1,6 @@
 <script type="text/javascript">
   $(document).ready(function() {
-    <?php if(isset($_GET["precio"])||isset($_GET["categoria"])) echo '$("#results").load("scripts/fetch_pages.php",{\'sql\':"'.$sql.'"}  );  //initial page number to load';
+    <?php if(isset($_GET["precio"])||isset($_GET["categoria"])||isset($_GET["buscar"])) echo '$("#results").load("scripts/fetch_pages.php",{\'sql\':"'.$sql.'"}  );  //initial page number to load';
     else echo '$("#results").load("scripts/fetch_pages.php");  //initial page number to load';?>
 
     $(".pagination").bootpag({
@@ -11,12 +11,13 @@
     e.preventDefault();
     $("#results").prepend('<div class="loading-indication"><img src="img/ajax-loader.gif" /> Loading...</div>');
 
-    <?php if(isset($_GET["precio"])||isset($_GET["categoria"]))
+    <?php if(isset($_GET["precio"])||isset($_GET["categoria"])||isset($_GET["buscar"]))
     echo '$("#results").load("scripts/fetch_pages.php",{\'page\':num,\'sql\':"'.$sql.'"}  );  //initial page number to load';
     else echo '$("#results").load("scripts/fetch_pages.php", {\'page\':num});'; ?>
 
   });
  });
+  
   function setGetParameter(paramName, paramValue) {
     var url = window.location.href;
     var hash = location.hash;

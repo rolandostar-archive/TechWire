@@ -11,14 +11,15 @@ $position = (($page_number-1) * 8);
 if(isset($_POST["sql"])) $sql = "SELECT *".substr($_POST["sql"], 15);
 else $sql = "SELECT * FROM version ORDER BY idproducto ASC";
 $sql = $sql." LIMIT $position, 8";
+//echo $sql;
 $results = mysqli_query($connecDB, $sql);
 if(mysqli_num_rows($results)>0){
 
 //output results from database
 
-echo '<table style="table-layout : fixed"><tr>'; $i=1;
+echo '<table style="table-layout : fixed"><col width="25%"><col width="25%"><col width="25%"><col width="25%"><tr>'; $i=1;
 while($row = mysqli_fetch_array($results)) {
-    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px></a></th>';
+    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px style="border-radius:15px;"><div class="info"><p style="margin-top:10px;">MXN $'.$row["precio"].'</p></div></a></th>';
     if($i%4 == 0) break; $i++;
 }
 mysqli_data_seek($results, 0); $i=1; //Reinicio
@@ -27,9 +28,9 @@ while($row = mysqli_fetch_array($results)) {
     echo '<td>'.$row["nombre"].'</td>';
     if($i%4 == 0) break; $i++;
 }
-echo '</tr></table style="table-layout : fixed"></div><div class="twelve columns"><table><tr>'; $i=1;
+echo '</tr></table style="table-layout : fixed"><col width="25%"><col width="25%"><col width="25%"><col width="25%"></div><div class="twelve columns"><table><tr>'; $i=1;
 while($row = mysqli_fetch_array($results)) {
-    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px></a></th>';
+    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px style="border-radius:15px;"><div class="info"><p style="margin-top:10px;">MXN $'.$row["precio"].'</p></div></a></th>';
     if($i%4 == 0) break; $i++;
 }
 mysqli_data_seek($results, 4); //Reinicio parcial
