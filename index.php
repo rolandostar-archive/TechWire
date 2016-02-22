@@ -1,16 +1,16 @@
 <?php 
 include("scripts/config.inc.php");
-
+header('Content-Type: text/html; charset=utf-8');
 $sql="SELECT COUNT(*) FROM version WHERE 1 AND ";
 if(isset($_GET["categoria"])) $sql = "SELECT COUNT(*) FROM version,producto WHERE producto.idcategoria='".$_GET["categoria"]."' AND producto.idproducto = version.idproducto AND ";
 
 if(isset($_GET["precio"])){
   switch ($_GET["precio"]) {
-    case 0:$sql = $sql."precio < 250";                break;
-    case 1:$sql = $sql."precio BETWEEN 250 AND 500";  break;
-    case 2:$sql = $sql."precio BETWEEN 500 AND 1000"; break;
-    case 3:$sql = $sql."precio BETWEEN 1000 AND 2000";break;
-    case 4:$sql = $sql."precio > 2000";               break;
+    case 1:$sql = $sql."precio < 250";                break;
+    case 2:$sql = $sql."precio BETWEEN 250 AND 500";  break;
+    case 3:$sql = $sql."precio BETWEEN 500 AND 1000"; break;
+    case 4:$sql = $sql."precio BETWEEN 1000 AND 2000";break;
+    case 5:$sql = $sql."precio > 2000";               break;
     default:$sql = $sql."1";                          break;
   }
 }else $sql = $sql."1";
@@ -23,7 +23,7 @@ $pages = ceil($get_total_rows[0]/8);
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <title>TechWire - Catalogo</title>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,16 +75,15 @@ $pages = ceil($get_total_rows[0]/8);
   <div class="container catalog">
     <div class="two columns filter">
       <span>Filtrar por Precio</span>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','0');">Menos de $250</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','1');">$250 - $500</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','2');">$500 - $1000</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','3');">$1000 - $2000</a></li>
-      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','4');">Mas de $2000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','1');">Menos de $250</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','2');">$250 - $500</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','3');">$500 - $1000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','4');">$1000 - $2000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','5');">Mas de $2000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','0');">Cualquier Precio</a></li>
     </div>
-    <div class="ten columns">
-      <div class="products">
-        <div class="twelve columns" id="results"></div>
-      </div>
+    <div class="ten columns center">
+      <div id="results" style="width:100%"></div>
     </div>
   </div>
   <div class="pagination"></div>
