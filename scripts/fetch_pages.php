@@ -12,7 +12,13 @@ if(isset($_POST["page"])){
 $position = (($page_number-1) * 8);
 
 //Limit our results within a specified range. 
-$sql = "SELECT * FROM version ORDER BY idproducto ASC LIMIT $position, 8";
+
+if(isset($_POST["sql"])){
+    $sql = "SELECT *".substr($_POST["sql"], 15); 
+}else{
+    $sql = "SELECT * FROM version ORDER BY idproducto ASC";
+}
+$sql = $sql." LIMIT $position, 8";
 $results = mysqli_query($connecDB, $sql);
 
 //output results from database
@@ -21,7 +27,7 @@ $results = mysqli_query($connecDB, $sql);
 echo '<table><tr>'; $i=1;
 while($row = mysqli_fetch_array($results))
 {
-    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'.jpg" width=143px></a></th>';
+    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px></a></th>';
     if($i%4 == 0) break;
     /*echo '<li id="item_'.$row["id"].'">'.$row["id"].'. <span class="page_name">'.$row["name"].'</span><span class="page_message">'.$row["message"].'</span></li>';*/
     $i++;
@@ -42,7 +48,7 @@ echo '</tr></table>
             <tr>'; $i=1;
 while($row = mysqli_fetch_array($results))
 {
-    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'.jpg" width=143px></a></th>';
+    echo '<th><a href="detalle.php?id='.$row["idproducto"].'&color='.$row["color"].'"><img src="catalogo/'.$row["idproducto"].'/'.$row["color"].'/0.jpg" width=143px></a></th>';
     if($i%4 == 0) break;
     $i++;
 }

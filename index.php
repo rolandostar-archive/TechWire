@@ -1,7 +1,35 @@
 <?php 
 include("scripts/config.inc.php");
 
-$results = mysqli_query($connecDB,"SELECT COUNT(*) FROM version ORDER BY idproducto");
+$sql="SELECT COUNT(*) FROM version WHERE 1 AND ";
+if(isset($_GET["categoria"])){
+  $sql = "SELECT COUNT(*) FROM version,producto WHERE producto.idcategoria='".$_GET["categoria"]."' AND producto.idproducto = version.idproducto AND ";
+}
+
+if(isset($_GET["precio"])){
+switch ($_GET["precio"]) {
+    case 0:
+      $sql = $sql."precio < 250";
+      break;
+    case 1:
+      $sql = $sql."precio BETWEEN 250 AND 500";
+      break;
+    case 2:
+      $sql = $sql."precio BETWEEN 500 AND 1000";
+      break;
+    case 3:
+      $sql = $sql."precio BETWEEN 1000 AND 2000";
+      break;
+    case 4:
+      $sql = $sql."precio > 2000";
+      break;
+    default:
+      $sql = $sql."1";
+}
+}else{
+  $sql = $sql."1";
+}
+$results = mysqli_query($connecDB,$sql);
 $get_total_rows = mysqli_fetch_array($results); //total
 
 //Division
@@ -28,9 +56,19 @@ $pages = ceil($get_total_rows[0]/8);
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script type="text/javascript" src="scripts/jquery.bootpag.min.js"></script>
 
+
+
   <script type="text/javascript">
     $(document).ready(function() {
-  $("#results").load("scripts/fetch_pages.php");  //initial page number to load
+
+<?php 
+if(isset($_GET["precio"])||isset($_GET["categoria"])){
+  echo '$("#results").load("scripts/fetch_pages.php",{\'sql\':"'.$sql.'"}  );  //initial page number to load';
+}else{
+  echo '$("#results").load("scripts/fetch_pages.php");  //initial page number to load';
+}
+?>
+  
   $(".pagination").bootpag({
    total: <?php echo $pages; ?>,
    page: 1,
@@ -38,10 +76,44 @@ $pages = ceil($get_total_rows[0]/8);
  }).on("page", function(e, num){
   e.preventDefault();
   $("#results").prepend('<div class="loading-indication"><img src="img/ajax-loader.gif" /> Loading...</div>');
-  $("#results").load("scripts/fetch_pages.php", {'page':num});
+
+<?php 
+if(isset($_GET["precio"])||isset($_GET["categoria"])){
+  echo '$("#results").load("scripts/fetch_pages.php",{\'page\':num,\'sql\':"'.$sql.'"}  );  //initial page number to load';
+}else{
+  echo '$("#results").load("scripts/fetch_pages.php", {\'page\':num});';
+}
+?>
+
 });
 
 });
+
+
+function setGetParameter(paramName, paramValue)
+{
+    var url = window.location.href;
+    var hash = location.hash;
+    url = url.replace(hash, '');
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = url.substring(0, url.indexOf(paramName));
+        var suffix = url.substring(url.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+    if (url.indexOf("?") < 0)
+        url += "?" + paramName + "=" + paramValue;
+    else
+        url += "&" + paramName + "=" + paramValue;
+    }
+    window.location.href = url + hash;
+}
+
+
 </script>
 
 
@@ -67,11 +139,11 @@ $pages = ceil($get_total_rows[0]/8);
     <div class="container navbar">
       <div class="menu">
         <ul>
-          <li><a href="#"><span>Electrodomesticos</span></a></li>
-          <li><a href="#"><span>Audio</span></a></li>
-          <li><a href="#"><span>TV y Video</span></a></li>
-          <li><a href="#"><span>Tecnología</span></a></li>
-          <li><a href="#"><span>Videojuegos</span></a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Electrodomesticos');"><span>Electrodomesticos</span></a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Audio');"><span>Audio</span></a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','TV');"><span>TV y Video</span></a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Tecnologia');"><span>Tecnología</span></a></li>
+          <li><a href="javascript:void(0)" onclick="setGetParameter('categoria','Videojuegos');"><span>Videojuegos</span></a></li>
         </ul>
       </div>
     </div>
@@ -81,11 +153,11 @@ $pages = ceil($get_total_rows[0]/8);
   <div class="container catalog">
     <div class="two columns filter">
       <span>Filtrar por Precio</span>
-      <li><a href="#">Menos de $250</a></li>
-      <li><a href="#">$250 - $500</a></li>
-      <li><a href="#">$500 - $1000</a></li>
-      <li><a href="#">$1000 - $2000</a></li>
-      <li><a href="#">Mas de $2000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','0');">Menos de $250</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','1');">$250 - $500</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','2');">$500 - $1000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','3');">$1000 - $2000</a></li>
+      <li><a href="javascript:void(0)" onclick="setGetParameter('precio','4');">Mas de $2000</a></li>
     </div>
     <div class="ten columns">
       <div class="products">

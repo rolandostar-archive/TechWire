@@ -67,12 +67,12 @@ while($row = mysqli_fetch_array($results)){
     <div class="row">
       <div class="one-third column">
         <div class="one-third column">
-        <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'.jpg" width=90px>'?>
-          <img src="img/aud2.jpg" width=90px>
-          <img src="img/aud3.jpg" width=90px>
+        <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'/0.jpg" width=90px>'?>
+        <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'/1.jpg" width=90px>'?>
+        <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'/2.jpg" width=90px>'?>
         </div>
         <div class="two-thirds column">
-          <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'.jpg" width=100%>'?>
+          <?php echo '<img src="catalogo/'.$id_producto.'/'.$color.'/0.jpg" width=100%>'?>
         </div>
       </div>
       <div class="two-thirds column">
