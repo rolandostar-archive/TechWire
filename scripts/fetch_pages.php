@@ -31,7 +31,7 @@ mysqli_data_seek($results, 0); $i=1;
 echo '</tr><tr>';
 while($row = mysqli_fetch_array($results))
 {
-    echo '<td>'.$row["descripcion"].'</td>';
+    echo '<td>'.$row["nombre"].'</td>';
     if($i%4 == 0) break;
     $i++;
 }
@@ -50,7 +50,7 @@ mysqli_data_seek($results, 4);
 echo '</tr><tr>';
 while($row = mysqli_fetch_array($results))
 {
-    echo '<td>'.$row["descripcion"].'</td>';
+    echo '<td>'.$row["nombre"].'</td>';
 }
 echo '</tr>
           </table>';
